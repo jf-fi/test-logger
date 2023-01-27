@@ -1,4 +1,4 @@
-use std::env;
+use std::{env, fs::OpenOptions};
 
 use clap::Parser;
 use colored::Colorize;
@@ -24,10 +24,26 @@ fn main() {
     let args = Args::parse();
 
     if let Ok(workspace) = env::var("GITHUB_WORKSPACE") {
-        let results_file = workspace.to_owned() + "/test/results.csv";
+        let dir = workspace.to_owned() + "/test/results.csv";
+        let file_exists = std::path::Path::new(&dir).exists();
+        let results_file = OpenOptions::new()
+            .write(true)
+            .read(true)
+            .append(true)
+            .open(dir)
+            .unwrap();
+
         if args.output {
-            let mut reader = csv::Reader::from_path(results_file).unwrap();
-            let total_records = reader.records().count();
+            let total_records = csv::Reader::from_reader(results_file).records().count();
+
+            // File consumed counting, so re-open
+            let results_file = OpenOptions::new()
+                .write(true)
+                .read(true)
+                .append(true)
+                .open(workspace.to_owned() + "/test/results.csv")
+                .unwrap();
+            let mut reader = csv::Reader::from_reader(&results_file);
             for (idx, record) in reader.records().enumerate() {
                 let record = record.unwrap();
 
@@ -49,7 +65,14 @@ fn main() {
                 }
             }
         } else {
-            let mut writer = csv::Writer::from_path(results_file).unwrap();
+            let mut writer = csv::Writer::from_writer(results_file);
+
+            if !file_exists {
+                writer
+                    .write_record(&["Result", "Message", "Explanation"])
+                    .unwrap();
+            }
+
             let result = if args.result_type == 'p' {
                 "PASS"
             } else {
