@@ -1,0 +1,13 @@
+[package]
+name = "test-logger"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "lg"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4.1.4", features = ["derive"] }
+colored = "2.0.0"
+csv = "1.1.6"
