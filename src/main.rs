@@ -23,7 +23,7 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    let dir = "../test/results.csv";
+    let dir = "results.csv";
     let file_exists = std::path::Path::new(&dir).exists();
     let results_file = OpenOptions::new()
         .write(true)
