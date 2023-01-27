@@ -30,6 +30,7 @@ fn main() {
             .write(true)
             .read(true)
             .append(true)
+            .create(true)
             .open(dir)
             .unwrap();
 
@@ -41,6 +42,7 @@ fn main() {
                 .write(true)
                 .read(true)
                 .append(true)
+                .create(true)
                 .open(workspace.to_owned() + "/test/results.csv")
                 .unwrap();
             let mut reader = csv::Reader::from_reader(&results_file);
