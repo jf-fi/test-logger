@@ -1,3 +1,5 @@
+use std::env;
+
 use clap::Parser;
 use colored::Colorize;
 
@@ -21,7 +23,7 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    if let Some(workspace) = option_env!("GITHUB_WORKSPACE") {
+    if let Ok(workspace) = env::var("GITHUB_WORKSPACE") {
         let results_file = workspace.to_owned() + "/test/results.csv";
         if args.output {
             let mut reader = csv::Reader::from_path(results_file).unwrap();
