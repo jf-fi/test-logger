@@ -1,4 +1,4 @@
-use std::{env, fs::OpenOptions};
+use std::fs::OpenOptions;
 
 use clap::Parser;
 use colored::Colorize;
@@ -23,9 +23,20 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    if let Ok(workspace) = env::var("GITHUB_WORKSPACE") {
-        let dir = workspace.to_owned() + "/test/results.csv";
-        let file_exists = std::path::Path::new(&dir).exists();
+    let dir = "../test/results.csv";
+    let file_exists = std::path::Path::new(&dir).exists();
+    let results_file = OpenOptions::new()
+        .write(true)
+        .read(true)
+        .append(true)
+        .create(true)
+        .open(dir)
+        .unwrap();
+
+    if args.output {
+        let total_records = csv::Reader::from_reader(results_file).records().count();
+
+        // File consumed counting, so re-open
         let results_file = OpenOptions::new()
             .write(true)
             .read(true)
@@ -33,57 +44,44 @@ fn main() {
             .create(true)
             .open(dir)
             .unwrap();
+        let mut reader = csv::Reader::from_reader(&results_file);
+        for (idx, record) in reader.records().enumerate() {
+            let record = record.unwrap();
 
-        if args.output {
-            let total_records = csv::Reader::from_reader(results_file).records().count();
+            let mut fields = record.iter();
+            let result_type = fields.next().unwrap();
+            let message = fields.next().unwrap();
+            let explanation = fields.next().unwrap();
 
-            // File consumed counting, so re-open
-            let results_file = OpenOptions::new()
-                .write(true)
-                .read(true)
-                .append(true)
-                .create(true)
-                .open(workspace.to_owned() + "/test/results.csv")
-                .unwrap();
-            let mut reader = csv::Reader::from_reader(&results_file);
-            for (idx, record) in reader.records().enumerate() {
-                let record = record.unwrap();
-
-                let mut fields = record.iter();
-                let result_type = fields.next().unwrap();
-                let message = fields.next().unwrap();
-                let explanation = fields.next().unwrap();
-
-                let mut message = format!("[{idx}/{total_records}] {result_type} | {message}");
-                if !explanation.is_empty() {
-                    message.push_str("\n    ");
-                    message += explanation;
-                }
-
-                if result_type == "PASS" {
-                    println!("{}", message.green());
-                } else {
-                    println!("{}", message.red());
-                }
-            }
-        } else {
-            let mut writer = csv::Writer::from_writer(results_file);
-
-            if !file_exists {
-                writer
-                    .write_record(&["Result", "Message", "Explanation"])
-                    .unwrap();
+            let mut message = format!("[{idx}/{total_records}] {result_type} | {message}");
+            if !explanation.is_empty() {
+                message.push_str("\n    ");
+                message += explanation;
             }
 
-            let result = if args.result_type == 'p' {
-                "PASS"
+            if result_type == "PASS" {
+                println!("{}", message.green());
             } else {
-                "FAIL"
-            };
+                println!("{}", message.red());
+            }
+        }
+    } else {
+        let mut writer = csv::Writer::from_writer(results_file);
 
+        if !file_exists {
             writer
-                .write_record(&[result, &args.message, &args.explanation])
+                .write_record(&["Result", "Message", "Explanation"])
                 .unwrap();
         }
+
+        let result = if args.result_type == 'p' {
+            "PASS"
+        } else {
+            "FAIL"
+        };
+
+        writer
+            .write_record(&[result, &args.message, &args.explanation])
+            .unwrap();
     }
 }
