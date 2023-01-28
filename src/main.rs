@@ -1,7 +1,6 @@
-use std::fs::OpenOptions;
+use std::{fs::OpenOptions, process::Stdio};
 
 use clap::Parser;
-use colored::Colorize;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -53,6 +52,7 @@ fn main() {
             let message = fields.next().unwrap();
             let explanation = fields.next().unwrap();
 
+            let idx = idx + 1;
             let mut message = format!("[{idx}/{total_records}] {result_type} | {message}");
             if !explanation.is_empty() {
                 message.push_str("\n    ");
@@ -60,9 +60,17 @@ fn main() {
             }
 
             if result_type == "PASS" {
-                println!("{}", message.green());
+                let message = "\x1B[0;32m".to_owned() + &message;
+                std::process::Command::new("echo")
+                    .arg(message)
+                    .spawn()
+                    .unwrap();
             } else {
-                println!("{}", message.red());
+                let message = "\x1B[0;31m".to_owned() + &message;
+                std::process::Command::new("echo")
+                    .arg(message)
+                    .output()
+                    .unwrap();
             }
         }
     } else {
