@@ -1,4 +1,4 @@
-use std::{fs::OpenOptions, process::Stdio};
+use std::{fs::OpenOptions, process::Stdio, thread::sleep_ms};
 
 use clap::Parser;
 
@@ -55,10 +55,6 @@ fn main() {
 
             let idx = idx + 1;
             let mut message = format!("[{idx}/{total_records}] {result_type} | {message}");
-            if !explanation.is_empty() {
-                message.push_str("\n    ");
-                message += explanation;
-            }
 
             if result_type == "PASS" {
                 let message = "\x1B[0;32m".to_owned() + &message;
@@ -74,6 +70,16 @@ fn main() {
                     .unwrap();
                 failed = true;
             }
+
+            if !explanation.is_empty() {
+                let message = "\x1B[1;33m    -".to_owned() + &explanation;
+                std::process::Command::new("echo")
+                    .arg(message)
+                    .spawn()
+                    .unwrap();
+            }
+
+            sleep_ms(1);
         }
 
         if failed {
