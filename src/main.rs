@@ -77,7 +77,7 @@ fn main() {
         }
 
         if failed {
-            std::env::set_var("failed", 1);
+            std::env::set_var("failed", "1");
         }
     } else {
         let mut writer = csv::Writer::from_writer(results_file);
