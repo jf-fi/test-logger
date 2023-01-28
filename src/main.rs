@@ -78,8 +78,6 @@ fn main() {
                     .spawn()
                     .unwrap();
             }
-
-            sleep_ms(1);
         }
 
         if failed {
