@@ -72,12 +72,14 @@ fn main() {
             }
 
             if !explanation.is_empty() {
-                let message = "\x1B[1;33m    -".to_owned() + &explanation;
+                let message = "\x1B[1;33m    - ".to_owned() + &explanation;
                 std::process::Command::new("echo")
                     .arg(message)
                     .spawn()
                     .unwrap();
             }
+
+            sleep_ms(1);
         }
 
         if failed {
