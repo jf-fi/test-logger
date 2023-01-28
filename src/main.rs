@@ -22,6 +22,7 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
+    let mut failed = false;
     let dir = "results.csv";
     let file_exists = std::path::Path::new(&dir).exists();
     let results_file = OpenOptions::new()
@@ -71,7 +72,12 @@ fn main() {
                     .arg(message)
                     .spawn()
                     .unwrap();
+                failed = true;
             }
+        }
+
+        if failed {
+            std::process::exit(1);
         }
     } else {
         let mut writer = csv::Writer::from_writer(results_file);
