@@ -69,7 +69,7 @@ fn main() {
                 let message = "\x1B[0;31m".to_owned() + &message;
                 std::process::Command::new("echo")
                     .arg(message)
-                    .output()
+                    .spawn()
                     .unwrap();
             }
         }
