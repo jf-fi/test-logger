@@ -61,13 +61,13 @@ fn main() {
             }
 
             if result_type == "PASS" {
-                let message = "\033[0;32m".to_owned() + &message;
+                let message = &message;
                 std::process::Command::new("echo")
                     .arg(message)
                     .spawn()
                     .unwrap();
             } else {
-                let message = "\033[0;31m".to_owned() + &message;
+                let message = &message;
                 std::process::Command::new("echo")
                     .arg(message)
                     .spawn()
