@@ -60,13 +60,13 @@ fn main() {
                 let message = "\x1B[0;32m".to_owned() + &message;
                 std::process::Command::new("echo")
                     .arg(message)
-                    .spawn()
+                    .output()
                     .unwrap();
             } else {
                 let message = "\x1B[0;31m".to_owned() + &message;
                 std::process::Command::new("echo")
                     .arg(message)
-                    .spawn()
+                    .output()
                     .unwrap();
                 failed = true;
             }
