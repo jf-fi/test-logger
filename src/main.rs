@@ -73,7 +73,7 @@ fn main() {
                 .spawn()
                 .unwrap();
 
-            std::thread::sleep(Duration::from_millis(20));
+            std::thread::sleep(Duration::from_millis(100));
         }
 
         if failed {
