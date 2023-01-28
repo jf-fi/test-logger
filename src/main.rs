@@ -1,4 +1,4 @@
-use std::{fs::OpenOptions, process::Stdio, thread::sleep_ms};
+use std::{fs::OpenOptions, process::Stdio, thread::sleep_ms, time::Duration};
 
 use clap::Parser;
 
@@ -57,29 +57,23 @@ fn main() {
             let mut message = format!("[{idx}/{total_records}] {result_type} | {message}");
 
             if result_type == "PASS" {
-                let message = "\x1B[0;32m".to_owned() + &message;
-                std::process::Command::new("echo")
-                    .arg(message)
-                    .spawn()
-                    .unwrap();
+                message = "\x1B[0;32m".to_owned() + &message;
             } else {
-                let message = "\x1B[0;31m".to_owned() + &message;
-                std::process::Command::new("echo")
-                    .arg(message)
-                    .spawn()
-                    .unwrap();
+                message = "\x1B[0;31m".to_owned() + &message;
                 failed = true;
             }
 
             if !explanation.is_empty() {
-                let message = "\x1B[1;33m    - ".to_owned() + &explanation;
-                std::process::Command::new("echo")
-                    .arg(message)
-                    .spawn()
-                    .unwrap();
+                let explanation = "\n\x1B[1;33m    - ".to_owned() + &explanation;
+                message.push_str(&explanation);
             }
 
-            sleep_ms(1);
+            std::process::Command::new("echo")
+                .arg(message)
+                .spawn()
+                .unwrap();
+
+            std::thread::sleep(Duration::from_millis(1));
         }
 
         if failed {
