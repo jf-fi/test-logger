@@ -77,7 +77,8 @@ fn main() {
         }
 
         if failed {
-            std::process::Command::new("export")
+            std::process::Command::new("/bin/bash")
+                .arg("export")
                 .arg("FAILED=1")
                 .spawn()
                 .unwrap();
