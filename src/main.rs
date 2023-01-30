@@ -77,7 +77,10 @@ fn main() {
         }
 
         if failed {
-            std::env::set_var("FAILED", "1");
+            std::process::Command::new("export")
+                .arg("FAILED=1")
+                .spawn()
+                .unwrap();
         }
     } else {
         let mut writer = csv::Writer::from_writer(results_file);
