@@ -6,6 +6,7 @@ use std::{
 };
 
 use clap::Parser;
+use cmd_lib::run_cmd;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -78,7 +79,8 @@ fn main() {
                 .spawn()
                 .unwrap();
 
-            std::env::set_var("$GITHUB_STEP_SUMMARY", message);
+            let step_summary = "$GITHUB_STEP_SUMMARY";
+            run_cmd!(bash "echo $message >> $step_summary");
 
             std::thread::sleep(Duration::from_millis(100));
         }
