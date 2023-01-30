@@ -80,7 +80,7 @@ fn main() {
                 .unwrap();
 
             let step_summary = "$GITHUB_STEP_SUMMARY";
-            run_cmd!(bash -c "echo $message >> $step_summary").unwrap();
+            run_cmd!(bash -c "echo 'test message' >> $step_summary").unwrap();
 
             std::thread::sleep(Duration::from_millis(100));
         }
