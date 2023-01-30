@@ -78,6 +78,13 @@ fn main() {
                 .spawn()
                 .unwrap();
 
+            std::process::Command::new("echo")
+                .arg(message)
+                .arg(">>")
+                .arg("$GITHUB_STEP_SUMMARY")
+                .spawn()
+                .unwrap();
+
             std::thread::sleep(Duration::from_millis(100));
         }
 
