@@ -1,4 +1,9 @@
-use std::{fs::OpenOptions, process::Stdio, thread::sleep_ms, time::Duration};
+use std::{
+    fs::{File, OpenOptions},
+    process::Stdio,
+    thread::sleep_ms,
+    time::Duration,
+};
 
 use clap::Parser;
 
@@ -77,11 +82,7 @@ fn main() {
         }
 
         if failed {
-            std::process::Command::new("/bin/bash")
-                .arg("export")
-                .arg("FAILED=1")
-                .spawn()
-                .unwrap();
+            File::create("failed").unwrap();
         }
     } else {
         let mut writer = csv::Writer::from_writer(results_file);
