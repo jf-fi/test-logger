@@ -74,7 +74,7 @@ fn main() {
             }
 
             std::process::Command::new("echo")
-                .arg(message)
+                .arg(message.clone())
                 .spawn()
                 .unwrap();
 
