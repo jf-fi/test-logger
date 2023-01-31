@@ -62,12 +62,12 @@ fn main() {
             let explanation = fields.next().unwrap();
 
             let idx = idx + 1;
-            let mut message = format!("[{idx}/{total_records}] {result_type} | {message}");
+            let mut message = format!("[{idx}/{total_records}] {message}");
 
             if result_type == "PASS" {
-                message = ":x:".to_owned() + &message;
+                message = ":white_check_mark: ".to_owned() + &message;
             } else {
-                message = ":white_check_mark:".to_owned() + &message;
+                message = ":x: ".to_owned() + &message;
                 failed = true;
             }
 
