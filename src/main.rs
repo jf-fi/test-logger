@@ -72,7 +72,7 @@ fn main() {
             }
 
             if !explanation.is_empty() {
-                let explanation = "\n> ".to_owned() + &explanation;
+                let explanation = "\n> ".to_owned() + &explanation + "\n";
                 message.push_str(&explanation);
             }
 
