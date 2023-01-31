@@ -29,14 +29,14 @@ fn main() {
     let args = Args::parse();
 
     let mut failed = false;
-    let dir = std::env::var("REPO_NAME").unwrap().replace("/", "-") + ".csv";
+    let dir = "results.csv";
     let file_exists = std::path::Path::new(&dir).exists();
     let results_file = OpenOptions::new()
         .write(true)
         .read(true)
         .append(true)
         .create(true)
-        .open(&dir)
+        .open(dir)
         .unwrap();
 
     if args.output {
