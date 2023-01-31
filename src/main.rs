@@ -43,7 +43,6 @@ fn main() {
         let total_records = csv::Reader::from_reader(results_file).records().count();
 
         let step_summary = "$GITHUB_STEP_SUMMARY";
-        run_cmd!(bash -c "echo '```diff' >> $step_summary").unwrap();
 
         // File consumed counting, so re-open
         let results_file = OpenOptions::new()
@@ -66,14 +65,14 @@ fn main() {
             let mut message = format!("[{idx}/{total_records}] {result_type} | {message}");
 
             if result_type == "PASS" {
-                message = "+ ".to_owned() + &message + " +";
+                message = ":x:".to_owned() + &message;
             } else {
-                message = "- ".to_owned() + &message + " -";
+                message = ":white_check_mark:".to_owned() + &message;
                 failed = true;
             }
 
             if !explanation.is_empty() {
-                let explanation = "!    - ".to_owned() + &explanation + " !";
+                let explanation = "> ".to_owned() + &explanation;
                 message.push_str(&explanation);
             }
 
@@ -82,11 +81,10 @@ fn main() {
                 .spawn()
                 .unwrap();
 
-            run_cmd!(bash -c "echo 'test message' >> $step_summary").unwrap();
+            run_cmd!(bash -c "echo $message >> $step_summary").unwrap();
 
             std::thread::sleep(Duration::from_millis(100));
         }
-        run_cmd!(bash -c "'```' >> $step_summary").unwrap();
 
         if failed {
             File::create("failed").unwrap();
