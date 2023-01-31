@@ -62,7 +62,7 @@ fn main() {
             let explanation = fields.next().unwrap();
 
             let idx = idx + 1;
-            let mut message = format!("[{idx}/{total_records}] {message}");
+            let mut message = format!("[{idx}/{total_records}] {message}\n");
 
             if result_type == "PASS" {
                 message = ":white_check_mark: ".to_owned() + &message;
@@ -72,7 +72,7 @@ fn main() {
             }
 
             if !explanation.is_empty() {
-                let explanation = "\n> ".to_owned() + &explanation + "\n";
+                let explanation = "> ".to_owned() + &explanation + "\n";
                 message.push_str(&explanation);
             }
 
