@@ -81,7 +81,7 @@ fn main() {
                 .spawn()
                 .unwrap();
 
-            run_cmd!(bash -c "echo $message >> $step_summary").unwrap();
+            run_cmd!(bash -c "echo '$message' >> $step_summary").unwrap();
 
             std::thread::sleep(Duration::from_millis(100));
         }
